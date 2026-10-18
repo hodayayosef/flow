@@ -1,5 +1,5 @@
 """
-Zorem
+Flow
 A local, private monthly-budget app.
 
 Run:  python app.py            (this computer only, http://127.0.0.1:5000)
@@ -268,13 +268,13 @@ def lan_ip() -> str:
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Zorem – local budget app")
+    ap = argparse.ArgumentParser(description="Flow – local budget app")
     ap.add_argument("--lan", action="store_true", help="allow phones on the same Wi-Fi to connect")
     ap.add_argument("--port", type=int, default=5000)
     args = ap.parse_args()
     init_db()
     host = "0.0.0.0" if args.lan else "127.0.0.1"
-    print("\n  Zorem is running  ·  האפליקציה פועלת")
+    print("\n  Flow is running  ·  האפליקציה פועלת")
     print(f"  במחשב הזה:   http://127.0.0.1:{args.port}")
     if args.lan:
         print(f"  בטלפון (באותה רשת Wi-Fi):   http://{lan_ip()}:{args.port}")

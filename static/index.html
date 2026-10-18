@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>זורם</title>
+<title>זורם Flow</title>
 <meta name="description" content="ניהול כסף חודשי חכם ומסודר">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/static/icons/icon.svg" type="image/svg+xml">
@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#d7e3fb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="זורם">
+<meta name="apple-mobile-web-app-title" content="זורם Flow">
 <link rel="stylesheet" href="/static/fonts.css">
 <style>
 /* base reset */
@@ -880,7 +880,7 @@ function render(){
     <div class="htitle">
       <button class="foldbtn" id="foldBtn" aria-label="פתיחת התיקייה">${ic('menu')}</button>
       <div>
-        <h1>${view==='charts'?'דיאגרמות · ':view==='calendar'?'יומן · ':view==='search'?'חיפוש · ':view==='calc'?'מחשבון · ':view==='backup'?'גיבוי · ':''}${esc(B().name==='אישי'?'זורם':B().name)}</h1>
+        <h1>${view==='charts'?'דיאגרמות · ':view==='calendar'?'יומן · ':view==='search'?'חיפוש · ':view==='calc'?'מחשבון · ':view==='backup'?'גיבוי · ':''}${esc(B().name==='אישי'?'זורם Flow':B().name)}</h1>
         <div class="status ${store.mode==='db'?'':'local'}" id="status"><i></i><span>${store.mode==='db'?'נשמר בחשבון שלך באופן פרטי':'נשמר בדפדפן הזה בלבד'}${store.user?` · ${esc(store.user)}`:''}</span></div>
       </div>
     </div>
@@ -1399,7 +1399,7 @@ async function doBackup(){
   const data=JSON.stringify(await collectBackup());
   let dl=null;try{dl=await window.claude?.use?.('downloads')}catch(e){}
   if(!dl){backupMsg='ההורדה לא זמינה בתצוגה הזו';render();return}
-  try{await dl.save({filename:`Zorem-backup-${todayISO()}.json`,data});backupMsg='הגיבוי נשמר. כדאי לשמור אותו במקום בטוח.'}
+  try{await dl.save({filename:`Flow-backup-${todayISO()}.json`,data});backupMsg='הגיבוי נשמר. כדאי לשמור אותו במקום בטוח.'}
   catch(e){backupMsg=e&&e.code==='declined'?'':'לא הצלחתי לשמור את הקובץ'}
   render();
 }
@@ -1435,7 +1435,7 @@ async function buildReport(){
   // header
   rr(0,0,W,230,0,C.sky);
   T(`סיכום ${MONTHS[cur.getMonth()]} ${cur.getFullYear()}`,R,110,{f:`64px ${D}`,col:C.skyInk});
-  T(B().name==='אישי'?'זורם':B().name,R,165,{f:`30px ${FB}`,col:C.skyInk});
+  T(B().name==='אישי'?'זורם Flow':B().name,R,165,{f:`30px ${FB}`,col:C.skyInk});
   T(`הופק ב-${new Date().toLocaleDateString('he-IL')}`,L,165,{f:`24px ${FB}`,col:C.skyInk,al:'left'});
   if(M.motto) {x.font=`italic 26px ${FB}`;T(`"${M.motto.slice(0,70)}"`,R,205,{f:`26px ${FB}`,col:C.skyInk})}
   // KPI cards
@@ -1548,7 +1548,7 @@ const EN={
 'חומרים וציוד':'Materials & equipment','פרסום ושיווק':'Advertising & marketing','נסיעות ודלק':'Travel & fuel','טלפון ואינטרנט':'Phone & internet','תוכנות ומנויים':'Software & subscriptions','עמלות ותשלומים':'Fees & payments','שכירות מקום':'Space rental','ביטוח עסקי':'Business insurance','רו״ח והנהלת חשבונות':'Accountant & bookkeeping','מע״מ ומסים':'VAT & taxes','הדרכות וקורסים':'Training & courses','משלוחים ואריזה':'Shipping & packaging','חניות':'Parking',
 'בית וחשבונות':'Home & bills','אוכל וקניות':'Food & shopping','טיפוח ובריאות':'Care & health','פנאי ומשפחה':'Leisure & family','תחבורה':'Transport','כסף וחיסכון':'Money & savings','שונות':'Misc','הקטגוריות שלי':'My categories','קטגוריות של עסק':'Business categories',
 // general UI
-'זורם':'Zorem','אישי':'Personal','אישי נוסף':'Another personal','עסק':'Business','התיקייה שלי':'My folder','פתיחת התיקייה':'Open folder','חשבונות ':'Accounts','+ חשבון חדש':'+ New account','שם החשבון':'Account name','יצירה':'Create','ביטול':'Cancel','שמירה':'Save','סגירה':'Close','סיום':'Done','הבא':'Next','הקודם':'Back','דילוג':'Skip','כן, למחוק':'Yes, delete','מחיקת החשבון':'Delete account','למחוק את החשבון':'Delete the account','עריכת השם של':'Rename','מחיקת':'Delete',
+'זורם':'Flow','אישי':'Personal','אישי נוסף':'Another personal','עסק':'Business','התיקייה שלי':'My folder','פתיחת התיקייה':'Open folder','חשבונות ':'Accounts','+ חשבון חדש':'+ New account','שם החשבון':'Account name','יצירה':'Create','ביטול':'Cancel','שמירה':'Save','סגירה':'Close','סיום':'Done','הבא':'Next','הקודם':'Back','דילוג':'Skip','כן, למחוק':'Yes, delete','מחיקת החשבון':'Delete account','למחוק את החשבון':'Delete the account','עריכת השם של':'Rename','מחיקת':'Delete',
 'תצוגה':'View','ניהול החודש':'This month','דיאגרמות חודשיות':'Monthly charts','יומן':'Calendar','חיפוש הוצאות':'Search expenses','מחשבון':'Calculator','גיבוי ושחזור':'Backup & restore','הדרכה קצרה':'Quick tour','צבעי האתר':'Site colors','דיאגרמות לפי חודש':'Charts by month','שפה':'Language',
 'דיאגרמות · ':'Charts · ','יומן · ':'Calendar · ','חיפוש · ':'Search · ','מחשבון · ':'Calculator · ','גיבוי · ':'Backup · ',
 'נשמר בחשבון שלך באופן פרטי':'Saved privately to your account','נשמר בדפדפן הזה בלבד':'Saved in this browser only','השמירה נכשלה, כדאי לנסות שוב':'Saving failed, please try again','טוען את התקציב…':'Loading your budget…',
@@ -1588,13 +1588,13 @@ const EN={
 // calculator
 'אפשר גם להקליד במקלדת':'You can also use the keyboard','+ מע״מ':'+ VAT','בלי מע״מ':'Without VAT','הוספת התוצאה כהוצאה':'Add result as expense','צריך סכום חיובי':'Needs a positive amount',
 // backup
-'כל החשבונות, החודשים, הפתקים והיומן בקובץ אחד':'All accounts, months, notes and calendar in one file','כדאי להוריד גיבוי מדי פעם, ובמיוחד לפני מעבר למכשיר אחר. את הקובץ אפשר לטעון כאן בחזרה בכל מכשיר.':'Download a backup now and then, especially before switching devices. You can load the file back here on any device.','הורדת גיבוי':'Download backup','טעינת גיבוי מקובץ':'Load backup from file','מכינים את הגיבוי…':'Preparing the backup…','הגיבוי נשמר. כדאי לשמור אותו במקום בטוח.':'Backup saved. Keep it somewhere safe.','הגיבוי נטען בהצלחה':'Backup loaded successfully','הקובץ הזה לא נראה כמו גיבוי של זורם':'This file doesn’t look like a Zorem backup','לטעון את הגיבוי מ-':'Load the backup from','? הוא כולל':'? It includes','חודשים ו-':'months and','חשבונות. נתונים קיימים באותם חודשים יוחלפו בנתונים מהגיבוי.':'accounts. Existing data in those months will be replaced.','כן, לטעון':'Yes, load it','? כל ההוצאות, התקציבים והפתקים שלו יימחקו ולא יהיה אפשר לשחזר אותם.':'? All its expenses, budgets and notes will be deleted and can’t be restored.',
+'כל החשבונות, החודשים, הפתקים והיומן בקובץ אחד':'All accounts, months, notes and calendar in one file','כדאי להוריד גיבוי מדי פעם, ובמיוחד לפני מעבר למכשיר אחר. את הקובץ אפשר לטעון כאן בחזרה בכל מכשיר.':'Download a backup now and then, especially before switching devices. You can load the file back here on any device.','הורדת גיבוי':'Download backup','טעינת גיבוי מקובץ':'Load backup from file','מכינים את הגיבוי…':'Preparing the backup…','הגיבוי נשמר. כדאי לשמור אותו במקום בטוח.':'Backup saved. Keep it somewhere safe.','הגיבוי נטען בהצלחה':'Backup loaded successfully','הקובץ הזה לא נראה כמו גיבוי של זורם':'This file doesn’t look like a Flow backup','לטעון את הגיבוי מ-':'Load the backup from','? הוא כולל':'? It includes','חודשים ו-':'months and','חשבונות. נתונים קיימים באותם חודשים יוחלפו בנתונים מהגיבוי.':'accounts. Existing data in those months will be replaced.','כן, לטעון':'Yes, load it','? כל ההוצאות, התקציבים והפתקים שלו יימחקו ולא יהיה אפשר לשחזר אותם.':'? All its expenses, budgets and notes will be deleted and can’t be restored.',
 // chooser & report & onboarding
 'בוחרים מה יוצג במסך ניהול החודש':'Choose what appears on the month screen','הסכום הפנוי והסיכום':'Free amount & overview','קטגוריות':'Categories','לקוחות שלא שילמו (בעסק)':'Unpaid clients (business)',
 'סיכום החודש להורדה ':'Month summary download','להורדה':'to download','הכנסות, הוצאות וחיסכון של החודש':'This month’s income, expenses and savings','מכינים את הסיכום…':'Preparing the summary…','שמירה כתמונה':'Save as image','שמירה כקובץ PDF':'Save as PDF','תצוגה מקדימה של סיכום החודש':'Month summary preview','לא הצלחתי להכין את הסיכום':'Couldn’t prepare the summary',
-'ברוכים הבאים לזורם':'Welcome to Zorem','כאן מנהלים את הכסף של כל חודש: כמה נכנס, כמה יוצא וכמה נשאר. הכול נשמר באופן פרטי, ורק לך יש גישה לנתונים שלך.':'Manage each month’s money here: what comes in, what goes out and what’s left. Everything is saved privately, and only you can access your data.','מתחילים מההכנסה':'Start with income','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול בתכלת מראה כמה נשאר להוציא, וכמה זה יוצא ליום.':'Enter this month’s salary and a savings goal at the top. The big blue number shows how much is left to spend, and how much that is per day.','מוסיפים הוצאות':'Add expenses','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור הוורוד בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.':'Type an amount in the clear box of any category and press +. You can also use the round button in the corner. Tapping a category name opens its budget, recurring expenses and more. Choosing your categories is at the end of the list.','התיקייה בצד':'The side folder','בתיקייה יש חשבונות נוספים (למשל עסק), דיאגרמות, יומן, חיפוש, מחשבון וגיבוי. בטלפון פותחים אותה מכפתור התיקייה ליד הכותרת.':'The folder has more accounts (like a business), charts, calendar, search, calculator and backup. On a phone, open it with the folder button next to the title.','יאללה, מתחילים':'Let’s go',
+'ברוכים הבאים לזורם':'Welcome to Flow','כאן מנהלים את הכסף של כל חודש: כמה נכנס, כמה יוצא וכמה נשאר. הכול נשמר באופן פרטי, ורק לך יש גישה לנתונים שלך.':'Manage each month’s money here: what comes in, what goes out and what’s left. Everything is saved privately, and only you can access your data.','מתחילים מההכנסה':'Start with income','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול בתכלת מראה כמה נשאר להוציא, וכמה זה יוצא ליום.':'Enter this month’s salary and a savings goal at the top. The big blue number shows how much is left to spend, and how much that is per day.','מוסיפים הוצאות':'Add expenses','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור הוורוד בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.':'Type an amount in the clear box of any category and press +. You can also use the round button in the corner. Tapping a category name opens its budget, recurring expenses and more. Choosing your categories is at the end of the list.','התיקייה בצד':'The side folder','בתיקייה יש חשבונות נוספים (למשל עסק), דיאגרמות, יומן, חיפוש, מחשבון וגיבוי. בטלפון פותחים אותה מכפתור התיקייה ליד הכותרת.':'The folder has more accounts (like a business), charts, calendar, search, calculator and backup. On a phone, open it with the folder button next to the title.','יאללה, מתחילים':'Let’s go',
 // report canvas
-'הופק ב-':'Generated on','הכנסות ':'Income','נחסך':'Saved','נשאר פנוי':'Left free','חיסכון':'Savings','יעד החיסכון החודשי':'Monthly savings goal','· הושגו':'· achieved','% מהיעד':'% of goal','לא הוגדר יעד חיסכון החודש':'No savings goal set this month','הופרש לחיסכון למטרה':'Set aside for savings goal','הושקע:':'Invested:','אתגר החודש (':'Monthly challenge (','· הצלחה!':'· success!','מע״מ להעברה (בערך):':'VAT to pay (approx.):','באשראי, יורד בחודש הבא:':'On credit, charged next month:','קבועות מול משתנות':'Fixed vs variable','הוצאות לפי קטגוריה':'Expenses by category','לא נרשמו הוצאות החודש':'No expenses recorded this month','ועוד':'and','קטגוריות נוספות':'more categories','זורם · ניהול כסף חכם ומסודר':'Zorem · smart, organized money management',
+'הופק ב-':'Generated on','הכנסות ':'Income','נחסך':'Saved','נשאר פנוי':'Left free','חיסכון':'Savings','יעד החיסכון החודשי':'Monthly savings goal','· הושגו':'· achieved','% מהיעד':'% of goal','לא הוגדר יעד חיסכון החודש':'No savings goal set this month','הופרש לחיסכון למטרה':'Set aside for savings goal','הושקע:':'Invested:','אתגר החודש (':'Monthly challenge (','· הצלחה!':'· success!','מע״מ להעברה (בערך):':'VAT to pay (approx.):','באשראי, יורד בחודש הבא:':'On credit, charged next month:','קבועות מול משתנות':'Fixed vs variable','הוצאות לפי קטגוריה':'Expenses by category','לא נרשמו הוצאות החודש':'No expenses recorded this month','ועוד':'and','קטגוריות נוספות':'more categories','זורם · ניהול כסף חכם ומסודר':'Flow · smart, organized money management',
 // sample data notes
 'שופרסל':'Supermarket','רמי לוי':'Grocery store','לק ג׳ל':'Gel polish','ארוחה עם חברות':'Dinner with friends','אוכל לחתול':'Cat food','מנוי לחדר כושר':'Gym membership','נעליים':'Shoes','דלק':'Fuel','נטפליקס וספוטיפיי':'Netflix & Spotify','ביטוח בריאות':'Health insurance',
 'סוג':'Type','תיאור':'Description','תאריך':'Date','קבועה':'Fixed','משתנה':'Variable','אשראי לחודש הבא':'Credit next month','נשאר':'Left','להשאיר בעסק':'Keep in business','יעד חיסכון':'Savings goal','מע״מ להעברה (בערך)':'VAT to pay (approx.)',
