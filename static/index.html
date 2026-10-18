@@ -8,7 +8,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/static/icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<meta name="theme-color" content="#d7e3fb">
+<meta name="theme-color" content="#f5f6f8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Flow">
@@ -410,7 +410,273 @@ svg.ic{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;str
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<style>
+/* ===== Calm theme: light ground, dark blue-gray text, one soft accent, few borders, small radii ===== */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --surface-2:#f0f2f5; --fg:#1f2d3d; --muted:#667487; --line:#e4e8ed;
+  --accent:#3f6d8e; --accent-soft:#e9eff4; --track:#e5e9ee;
+  --pink:#89a7bf; --pink-soft:#eef2f6;            /* secondary = lighter shade of the same accent */
+  --sky:#e9eff4; --sky-fg:#1f2d3d;
+  --ok:#3f7a5f; --warn:#a87a32; --over:#b04a52; --over-soft:#f7ecec; --warn-soft:#f6f0e4;
+  --note:#ffffff; --note-line:#e9ecf0; --note-head:#1f2d3d;
+  --c1:#3f6d8e; --c2:#9db6ca; --c3:#24455e; --c4:#c4d4e1; --c5:#6a90ad; --c6:#dbe5ed; --c7:#aab3bd;
+  --e-pink:#ecd9df; --e-blue:#d6e3ee; --e-lilac:#e0dcec; --e-green:#d8e8de; --e-beige:#ece4d6; --e-brown:#e2d7cc; --e-gray:#e3e6ea; --e-fg:#1f2d3d;
+  --display:var(--body);
+  --r:10px; --r-s:6px;
+  --tap:44px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f;
+  --accent:#8fb3d0; --accent-soft:#223140; --track:#26303b; --pink:#6c89a2; --pink-soft:#1f2a35;
+  --sky:#223140; --sky-fg:#e4e9ef;
+  --ok:#76b493; --warn:#d0a45c; --over:#e0838a; --over-soft:#352225; --warn-soft:#30291c;
+  --note:#192029; --note-line:#2a333f; --note-head:#e4e9ef;
+  --c1:#8fb3d0; --c2:#4f6f8a; --c3:#c3d6e6; --c4:#3a5268; --c5:#a9c4da; --c6:#2e4153; --c7:#5c6875;
+  --e-pink:#4a3a40; --e-blue:#33445a; --e-lilac:#3e3a52; --e-green:#34483c; --e-beige:#4a4234; --e-brown:#463b33; --e-gray:#3a414a; --e-fg:#e4e9ef; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f;
+  --accent:#8fb3d0; --accent-soft:#223140; --track:#26303b; --pink:#6c89a2; --pink-soft:#1f2a35;
+  --sky:#223140; --sky-fg:#e4e9ef;
+  --ok:#76b493; --warn:#d0a45c; --over:#e0838a; --over-soft:#352225; --warn-soft:#30291c;
+  --note:#192029; --note-line:#2a333f; --note-head:#e4e9ef;
+  --c1:#8fb3d0; --c2:#4f6f8a; --c3:#c3d6e6; --c4:#3a5268; --c5:#a9c4da; --c6:#2e4153; --c7:#5c6875;
+  --e-pink:#4a3a40; --e-blue:#33445a; --e-lilac:#3e3a52; --e-green:#34483c; --e-beige:#4a4234; --e-brown:#463b33; --e-gray:#3a414a; --e-fg:#e4e9ef; color-scheme:dark}
+/* sticky-note paper for the default (blue) theme */
+:root{--note:#fdf3c8; --note-line:#efe0a6; --note-head:#7a5d1e; --note-ink:#3b3320}
+/* colour themes (light). Each theme sets the whole ground, text tone, accent and note paper */
+:root[data-palette="beige"]{
+  --bg:#f7f2ea; --surface:#fffdf9; --surface-2:#f1eadf; --fg:#3a3029; --muted:#7d7064; --line:#e8dfd2; --track:#ebe3d7;
+  --accent:#9c7650; --accent-soft:#f3eadf; --pink:#cfb293; --pink-soft:#f6efe6; --sky:#f3eadf; --sky-fg:#3a3029;
+  --c1:#9c7650; --c2:#d6bfa3; --c3:#6b4f33; --c4:#e8d9c5; --c5:#b9946c; --c6:#f0e6d8; --c7:#b8aea3;
+  --note:#fbefd6; --note-line:#ecdcbb; --note-head:#8a6236; --note-ink:#3a3029}
+:root[data-palette="pink"]{
+  --bg:#fbf4f5; --surface:#ffffff; --surface-2:#f7ecee; --fg:#3b2c33; --muted:#86717b; --line:#f0e1e5; --track:#f2e4e8;
+  --accent:#c06a85; --accent-soft:#fbe9ee; --pink:#e3adbe; --pink-soft:#fcf0f3; --sky:#fbe9ee; --sky-fg:#3b2c33;
+  --c1:#c06a85; --c2:#eab8c7; --c3:#8a3f57; --c4:#f5d5df; --c5:#d98ea5; --c6:#fae6ec; --c7:#c2b0b6;
+  --note:#fde4ec; --note-line:#f4cbd8; --note-head:#a8506c; --note-ink:#3b2c33}
+:root[data-palette="sea"]{
+  --bg:#f3f6f2; --surface:#ffffff; --surface-2:#eaf0e8; --fg:#26332b; --muted:#6c7a70; --line:#dfe7dc; --track:#e2eadf;
+  --accent:#5b8a6c; --accent-soft:#e7f0e9; --pink:#a9c6b1; --pink-soft:#eff5f0; --sky:#e7f0e9; --sky-fg:#26332b;
+  --c1:#5b8a6c; --c2:#b3cfba; --c3:#35583f; --c4:#d6e6d9; --c5:#7fa98c; --c6:#e8f1ea; --c7:#aab5ad;
+  --note:#eaf2df; --note-line:#d6e3c4; --note-head:#4f7244; --note-ink:#26332b}
+:root[data-palette="slate"]{
+  --bg:#f6f4fa; --surface:#ffffff; --surface-2:#efebf6; --fg:#2e2a3b; --muted:#77718a; --line:#e6e1f0; --track:#e8e3f1;
+  --accent:#7a68a8; --accent-soft:#eeeaf7; --pink:#bdb1db; --pink-soft:#f4f1fa; --sky:#eeeaf7; --sky-fg:#2e2a3b;
+  --c1:#7a68a8; --c2:#c3b8e0; --c3:#4d3f7a; --c4:#ddd5ef; --c5:#9a8bc6; --c6:#ece7f7; --c7:#b3adc2;
+  --note:#efe8fa; --note-line:#ddd1f1; --note-head:#6a559c; --note-ink:#2e2a3b}
+/* dark mode: shared dark ground, each theme keeps its own accent */
+@media (prefers-color-scheme:dark){:root[data-palette]:not([data-theme="light"]){
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f; --track:#26303b; --sky-fg:#e4e9ef;
+  --note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; --note-ink:#ece6d3}}
+:root[data-theme="dark"][data-palette]{
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f; --track:#26303b; --sky-fg:#e4e9ef;
+  --note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; --note-ink:#ece6d3}
+@media (prefers-color-scheme:dark){
+  :root:not([data-palette]):not([data-theme="light"]){--note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; --note-ink:#ece6d3}
+  :root[data-palette="beige"]:not([data-theme="light"]){--accent:#d2ad85;--accent-soft:#3a3026;--pink:#8a6f55;--pink-soft:#2c261f;--sky:#3a3026;--c1:#d2ad85;--c2:#7d6449}
+  :root[data-palette="pink"]:not([data-theme="light"]){--accent:#e59bb2;--accent-soft:#3d2630;--pink:#9c5d72;--pink-soft:#2e2027;--sky:#3d2630;--c1:#e59bb2;--c2:#8c4e63}
+  :root[data-palette="sea"]:not([data-theme="light"]){--accent:#8fc2a0;--accent-soft:#22352a;--pink:#55806a;--pink-soft:#1f2b24;--sky:#22352a;--c1:#8fc2a0;--c2:#4b7259}
+  :root[data-palette="slate"]:not([data-theme="light"]){--accent:#b4a6e0;--accent-soft:#2c2742;--pink:#6f62a0;--pink-soft:#242036;--sky:#2c2742;--c1:#b4a6e0;--c2:#5e528f}}
+:root[data-theme="dark"]:not([data-palette]){--note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; --note-ink:#ece6d3}
+:root[data-theme="dark"][data-palette="beige"]{--accent:#d2ad85;--accent-soft:#3a3026;--pink:#8a6f55;--pink-soft:#2c261f;--sky:#3a3026;--c1:#d2ad85;--c2:#7d6449}
+:root[data-theme="dark"][data-palette="pink"]{--accent:#e59bb2;--accent-soft:#3d2630;--pink:#9c5d72;--pink-soft:#2e2027;--sky:#3d2630;--c1:#e59bb2;--c2:#8c4e63}
+:root[data-theme="dark"][data-palette="sea"]{--accent:#8fc2a0;--accent-soft:#22352a;--pink:#55806a;--pink-soft:#1f2b24;--sky:#22352a;--c1:#8fc2a0;--c2:#4b7259}
+:root[data-theme="dark"][data-palette="slate"]{--accent:#b4a6e0;--accent-soft:#2c2742;--pink:#6f62a0;--pink-soft:#242036;--sky:#2c2742;--c1:#b4a6e0;--c2:#5e528f}
 
+/* theme picker */
+.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px;padding-inline:4px}
+.theme{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;border-radius:var(--r-s);padding:8px 4px;font-size:.82rem;min-height:var(--tap)}
+.theme:hover{background:var(--surface-2)}
+.theme.on{background:var(--accent-soft);font-weight:600}
+.tsw{display:flex;width:52px;height:34px;border-radius:var(--r-s);overflow:hidden;box-shadow:0 0 0 1px rgb(0 0 0 / .08)}
+.tsw i{flex:1}
+.tsw i:nth-child(1){background:var(--tb)}.tsw i:nth-child(2){background:var(--tn)}.tsw i:nth-child(3){background:var(--ta)}
+.theme.on .tsw{box-shadow:0 0 0 2px var(--accent)}
+
+/* the notes: a sticky note that is always visible */
+.wrap{max-width:1380px}
+.layout{grid-template-columns:minmax(0,1fr) 300px}
+.notes{position:sticky;top:max(16px,env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:6px;
+  background:var(--note);color:var(--note-ink);border-radius:3px 3px 3px 14px;padding:22px 18px 16px;margin-top:6px;
+  box-shadow:0 1px 1px rgb(0 0 0 / .05),0 10px 22px -10px rgb(60 45 20 / .28);transform:rotate(-.6deg)}
+.notes::before{content:"";position:absolute;top:-9px;left:50%;width:86px;height:20px;transform:translateX(-50%) rotate(2deg);
+  background:rgb(255 255 255 / .55);box-shadow:0 1px 2px rgb(0 0 0 / .08);border-radius:2px}
+.notes .note-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.notes h2{color:var(--note-head);font-size:1.15rem}
+.notes .lbl{color:var(--note-head);opacity:.75}
+.notes textarea{font-family:inherit;color:var(--note-ink);width:100%;min-height:360px;resize:vertical;border:0;background:transparent;line-height:32px;padding:0 2px;font-size:1.02rem;outline:none;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--note-line) 31px 32px);background-attachment:local}
+.notes textarea::placeholder{color:var(--note-head);opacity:.55}
+.notes .saved{font-size:.78rem;color:var(--note-head);opacity:.8;min-height:1.2em}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.notes{position:relative;top:auto;transform:none;margin-top:10px}.notes textarea{min-height:220px}}
+@media (prefers-reduced-motion:reduce){.notes{transform:none}}
+
+body{font-size:16px;letter-spacing:0}
+.wrap{max-width:1180px;gap:16px;padding-block:20px 96px}
+h1,h2{font-weight:600;letter-spacing:-.005em}
+h1{font-size:1.45rem}
+h2{font-size:1.05rem}
+.lbl{letter-spacing:.01em;font-weight:500}
+
+/* surfaces: no outlines, quiet backgrounds */
+.panel,.folder,.stat,.tile,.crow,.pick,.qcat,.cday,.ck,.insights li,.foldbtn,.month,.ghost,.money,.pdel,.icpick span,.langsw button,.chip,.rprev{border:0!important}
+.panel{border-radius:var(--r);padding:20px;box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.folder{border-radius:var(--r);box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.stat{background:var(--surface-2);border-radius:var(--r-s)}
+.crow{background:var(--surface-2);border-radius:var(--r-s);padding:6px 8px}
+.crow.over{background:var(--over-soft)}
+.crow.fx,.crow.vr{border-inline-start:3px solid var(--accent)!important}
+.crow.vr{border-inline-start-color:var(--pink)!important}
+.crow.addcat{border:1px dashed var(--line)!important;color:var(--accent);background:transparent}
+.catlist{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+.cadd input{width:76px}
+.money input,.chform>*,.owedadd>*{min-width:0}
+@media (max-width:520px){.catlist{grid-template-columns:1fr}}
+.tile{border-radius:var(--r)}
+.insights li{border-radius:var(--r-s);background:var(--surface-2)}
+.insights li.info{background:var(--surface-2)}
+.money{border-radius:var(--r-s);background:var(--surface-2);min-height:var(--tap)}
+.money:focus-within{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.txtin{border:1px solid transparent;background:var(--surface-2)!important;border-radius:var(--r-s);min-height:var(--tap)}
+.txtin:focus{border-color:var(--accent)}
+.cadd input{border:1px solid transparent;background:var(--surface);border-radius:var(--r-s);height:40px}
+.cadd input:focus{border-color:var(--accent)}
+.cnform input{border:1px solid var(--accent);border-radius:var(--r-s);height:36px}
+.bform,.vatline{border-radius:var(--r-s)}
+.vatline{background:var(--surface-2)}
+
+/* buttons: one accent, comfortable tap size */
+.primary,.danger{border-radius:var(--r-s);min-height:var(--tap);padding:10px 18px;font-weight:600}
+.primary{background:var(--accent);color:var(--surface)}
+.ghost{background:var(--surface-2);border-radius:var(--r-s);min-height:40px;padding:8px 14px;font-weight:500;color:var(--fg)}
+.ghost:hover{background:var(--accent-soft)}
+.small{min-height:40px}
+.fitem{border-radius:var(--r-s);min-height:var(--tap);font-weight:500}
+.fitem.on{background:var(--accent-soft)}
+.fitem.on svg{color:var(--accent)}
+.fitem.add{border:1px dashed var(--line)}
+.fitem .edit{width:36px;height:36px;border-radius:var(--r-s)}
+.fold-head{color:var(--accent)}
+.foldbtn{width:var(--tap);height:var(--tap);border-radius:var(--r-s);color:var(--fg);background:var(--surface)}
+.month{border-radius:var(--r);background:var(--surface);padding:2px}
+.month button{width:var(--tap);height:var(--tap);border-radius:var(--r-s)}
+.close{width:var(--tap);height:var(--tap);border-radius:var(--r-s)}
+.remind .close,.flash .close{width:36px;height:36px}
+.row .del{width:40px;height:40px;border-radius:var(--r-s)}
+.cnbtn{width:36px;height:36px;border-radius:var(--r-s)}
+.cnbtn:hover{background:var(--accent-soft);color:var(--accent)}
+.cnote{background:var(--surface);color:var(--muted);border-radius:4px}
+.cadd button{width:40px;height:40px;border-radius:var(--r-s);background:var(--accent-soft);color:var(--accent)}
+.cinfo{min-height:40px}
+.cinfo:hover .t b{color:var(--accent)}
+.pick{border-radius:var(--r-s);min-height:var(--tap)}
+.pick.on,.qcat.on{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.pick.on svg.ic,.qcat.on svg.ic{color:var(--accent)}
+.qcat{border-radius:var(--r-s);min-height:64px}
+.icpick span{border-radius:var(--r-s);height:44px}
+.icpick input:checked+span{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.langsw button{border-radius:var(--r-s);min-height:40px}
+.langsw button.on{background:var(--accent-soft)}
+.swatch{width:40px;height:40px;border-radius:var(--r-s);border:0;background:var(--a)}
+.swatch.on{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--fg)}
+.fab{background:var(--accent);border-radius:16px;box-shadow:0 6px 18px rgb(20 30 45 / .18)}
+.owedrow input{accent-color:var(--accent)}
+.daymodal{border-radius:var(--r)}
+@media (max-width:620px){.daymodal{border-radius:var(--r) var(--r) 0 0}}
+
+/* hero: the free amount */
+.hero{grid-template-columns:1fr}
+.free{background:var(--surface);color:var(--fg);border-radius:var(--r);padding:22px 20px;box-shadow:0 1px 2px rgb(20 30 45 / .04);gap:4px}
+.free .lbl{color:var(--muted);opacity:1}
+.free .big{font-weight:600;font-size:clamp(2.3rem,7vw,3rem);color:var(--accent);letter-spacing:-.01em}
+.free p{color:var(--muted);opacity:1;font-size:.95rem}
+.free.neg{background:var(--over-soft);color:var(--fg)}
+.free.neg .big{color:var(--over)}
+.freebar{height:6px;border-radius:3px;background:var(--track);overflow:hidden;margin-top:10px}
+.freebar>div{height:100%;background:var(--accent);transition:width .4s}
+.freeline{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:.9rem;color:var(--muted);margin-top:6px}
+.freeline b{color:var(--fg);font-weight:600}
+.bar,.split,.gbar,.bva .track{border-radius:3px}
+.bar>div,.bva .fill{border-radius:3px}
+.gbar>div{background:var(--accent)}
+.ring{background:conic-gradient(var(--rc,var(--accent)) calc(var(--p,0)*1%),var(--track) 0)}
+
+/* income */
+.income{gap:12px}
+.sec-head{margin-bottom:14px}
+
+/* collapsible sections */
+.folds{display:flex;flex-direction:column;gap:8px}
+.fold{background:var(--surface);border-radius:var(--r);box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.fold>summary{list-style:none;display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 20px;cursor:pointer;border-radius:var(--r)}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary:hover{background:var(--surface-2)}
+.fold>summary .ft{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.fold>summary .ft b{font-weight:600}
+.fold>summary .ft small{color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fold>summary .chev{width:20px;height:20px;color:var(--muted);transition:transform .2s;flex:none}
+.fold[open]>summary .chev{transform:rotate(180deg)}
+.fold-body{padding:0 20px 20px}
+.fold-body>.panel,.fold-body>section.panel{padding:0;box-shadow:none;background:transparent}
+.fold-body .sec-head>h2{display:none}
+.fold-body .sec-head{margin-bottom:10px}
+.fold-body .stats{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.fold-body .motto{background:transparent}
+.motto textarea{font-family:var(--body);font-weight:500;font-size:1.25rem}
+
+/* tools row */
+.viewtools{gap:8px}
+.viewtools .ghost{background:var(--surface)}
+.viewtools .ghost:hover{background:var(--accent-soft)}
+.viewtools .dotmark{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
+
+.fold[data-fold="challenge"] .sec-head>p,.fold[data-fold="owed"] .sec-head>p{display:none}
+.fold[data-fold="challenge"] .sec-head:not(:has(button)){display:none}
+
+/* misc colour clean-up */
+.remind{background:var(--surface);border-radius:var(--r);box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.remind .ri svg.ic{color:var(--accent)}
+.remind .close,.flash .close{background:var(--surface-2)}
+.flash{background:var(--accent-soft);border-radius:var(--r);font-weight:500}
+.sumbanner{border:0;background:var(--surface);border-radius:var(--r);min-height:var(--tap);font-weight:500;box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.sumbanner svg.ic{color:var(--accent)}
+.onbic{background:var(--accent-soft);color:var(--accent);border-radius:var(--r)}
+.onbdots i.on{background:var(--accent)}
+.cdisp{border-radius:var(--r-s)}
+.cres{font-weight:600}
+.cres.final{color:var(--accent)}
+.ck{border-radius:var(--r-s)}
+.ck.op{color:var(--accent);background:var(--accent-soft)}
+.ck.eq{background:var(--accent);color:var(--surface)}
+.cday{border-radius:var(--r-s)}
+.cday:hover{box-shadow:inset 0 0 0 1px var(--line)}
+.cday.sel{box-shadow:inset 0 0 0 1.5px var(--accent);background:var(--surface)}
+.cday.today .dn{background:var(--accent);border-radius:4px}
+.ev{border-radius:3px}
+.tile.addcat .nm,.tile.addcat .ring span{color:var(--accent)}
+.sample-tag{border-radius:4px}
+.sheet{box-shadow:0 0 30px rgb(20 30 45 / .14)}
+.scrim{background:rgb(20 30 45 / .3)}
+@media (max-width:520px){
+  .panel,.free{padding:16px}
+  .fold>summary{padding:8px 16px}
+  .fold-body{padding:0 16px 16px}
+  .viewtools{justify-content:stretch}
+  .viewtools .ghost{flex:1 1 auto;justify-content:center}
+}
+.rectext{margin:0;line-height:1.6}
+.reccode{text-align:center;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:1.3rem;font-weight:600;letter-spacing:.06em;background:var(--accent-soft);border-radius:var(--r-s);padding:16px 8px;user-select:all;word-break:break-all}
+.recbtns{display:flex;gap:8px}.recbtns .ghost{flex:1}
+.recwarn{margin:0;background:var(--warn-soft);border-radius:var(--r-s);padding:10px 12px;font-size:.92rem;line-height:1.5}
+.recerr{margin:0;color:var(--over);font-weight:500}
+.delwarn{display:flex;flex-direction:column;gap:4px;background:var(--over-soft);color:var(--fg);border-radius:var(--r-s);padding:12px 14px;line-height:1.55}
+.delwarn b{color:var(--over)}
+.fitem.delacc,.fitem.delacc svg.ic{color:var(--over)}
+.fitem.delacc:hover{background:var(--over-soft)}
+.danger{background:var(--over);color:#fff}
+.danger:disabled,.ghost:disabled{opacity:.6}
+.fitem small{margin-inline-start:auto}
+</style>
 </head>
 <body>
 <div class="wrap" id="app"><div class="loading">טוען את התקציב…</div></div>
@@ -491,8 +757,20 @@ const ICONS={
   studies:'<path d="M4 4.5A1.5 1.5 0 015.5 3H20v15H5.5A1.5 1.5 0 004 19.5z"/><path d="M4 19.5A1.5 1.5 0 005.5 21H20v-3"/><path d="M9 7h7M9 10.5h5"/>',
   credit:'<rect x="2" y="7" width="17" height="12" rx="2"/><path d="M2 11h17M5 15h3"/><path d="M6 4h14a2 2 0 012 2v9"/>',
   fees:'<path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/><path d="M12 10.5v3"/>',
-  prev:'<path d="M9 6l6 6-6 6"/>', next:'<path d="M15 6l-6 6 6 6"/>'
+  prev:'<path d="M9 6l6 6-6 6"/>', next:'<path d="M15 6l-6 6 6 6"/>',
+  down:'<path d="M6 9l6 6 6-6"/>',
+  note:'<path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8 12h8M8 16h5"/>'
 };
+/* colour themes: [key, name, background, accent, note paper] */
+const THEMES=[['','כחול','#f5f6f8','#3f6d8e','#fdf3c8'],['beige','בז׳','#f7f2ea','#9c7650','#fbefd6'],['pink','ורוד בהיר','#fbf4f5','#c06a85','#fde4ec'],['sea','מרווה','#f3f6f2','#5b8a6c','#eaf2df'],['slate','לילך','#f6f4fa','#7a68a8','#efe8fa']];
+/* collapsible sections on the month screen: remember which are open */
+let folds=new Set();try{folds=new Set(JSON.parse(localStorage.getItem('kis-folds')||'[]'))}catch(e){}
+function foldHTML(key,title,sub,body){
+  if(!body) return '';
+  return `<details class="fold" data-fold="${key}" data-sec="${key}" ${folds.has(key)?'open':''}>
+    <summary><span class="ft"><b>${title}</b>${sub?`<small>${sub}</small>`:''}</span>${ic('down','ic chev')}</summary>
+    <div class="fold-body">${body}</div></details>`;
+}
 const CATS=[
   {id:'standing',name:'הוראות קבע'},{id:'payments',name:'תשלומים'},{id:'insurance',name:'ביטוח'},
   {id:'rent',name:'שכר דירה'},{id:'arnona',name:'ארנונה'},{id:'vaad',name:'ועד בית'},
@@ -546,7 +824,7 @@ const store={mode:'local',user:null,chain:Promise.resolve(),
     try{
       const r=await fetch('/api/me',{credentials:'same-origin'});
       if(r.status===401){location.href='/login';await new Promise(()=>{})}
-      if(r.ok){const me=await r.json();this.user=me.username;this.mode='db'}
+      if(r.ok){const me=await r.json();this.user=me.username;this.hasRecovery=!!me.has_recovery;this.mode='db'}
     }catch(e){}
   },
   url(name){return '/api/doc/'+encodeURIComponent(name)},
@@ -678,7 +956,8 @@ function insights(c){
 function ringStyle(spent,budget,base='var(--accent)'){
   if(!budget) return {cls:spent?'':'empty',style:spent?`--p:100;--rc:${base}`:`--rc:${base}`};
   const p=Math.min(100,spent/budget*100);
-  const rc=spent>budget?'var(--over)':p>=85?'var(--warn)':base;
+  // fixed bills that are fully paid are expected, so only variable spending gets the "close to limit" colour
+  const rc=spent>budget?'var(--over)':p>=85&&base!=='var(--accent)'?'var(--warn)':base;
   return{cls:'',style:`--p:${p};--rc:${rc}`};
 }
 
@@ -710,6 +989,7 @@ function folderHTML(){
       <button class="fitem ${view==='calc'?'on':''}" data-view="calc">${ic('accountant')}<span>מחשבון</span></button>
       <button class="fitem ${view==='backup'?'on':''}" data-view="backup">${ic('download')}<span>גיבוי ושחזור</span></button>
       <button class="fitem" id="showOnb">${ic('info')}<span>הדרכה קצרה</span></button>
+      ${store.mode==='db'?`<button class="fitem" id="showRec">${ic('insurance')}<span>קוד שחזור</span>${store.hasRecovery?'':'<small>לא נוצר</small>'}</button>`:''}
     </div>
     <div class="fold-sec"><span class="lbl">דיאגרמות לפי חודש</span>
       ${months.map(m=>`<button class="fitem ${view==='charts'&&keyOf(m)===keyOf(cur)?'on':''}" data-chartmonth="${keyOf(m)}">${ic('pie')}<span>${MONTHS[m.getMonth()]} <small class="num">${m.getFullYear()}</small></span></button>`).join('')}
@@ -717,15 +997,13 @@ function folderHTML(){
     <div class="fold-sec"><span class="lbl">שפה · Language</span>
       <div class="langsw"><button class="${!isEn()?'on':''}" data-lang="he">עברית</button><button class="${isEn()?'on':''}" data-lang="en">English</button></div>
     </div>
-    <div class="fold-sec"><span class="lbl">צבעי האתר</span>
-      <div class="swatches">
-        <button class="swatch ${!prefs.palette?'on':''}" data-pal="" style="--a:#2a8cc4;--b:#e0679a" aria-label="תכלת וורוד"></button>
-        <button class="swatch ${prefs.palette==='sea'?'on':''}" data-pal="sea" style="--a:#2a8cc4;--b:#23907f" aria-label="תכלת וירוק ים"></button>
-        <button class="swatch ${prefs.palette==='slate'?'on':''}" data-pal="slate" style="--a:#2a8cc4;--b:#5562cf" aria-label="תכלת וכחול"></button>
-      </div>
+    <div class="fold-sec"><span class="lbl">ערכת צבעים</span>
+      <div class="themes">${THEMES.map(([k,n,bg,ac,nt])=>`<button class="theme ${(prefs.palette||'')===k?'on':''}" data-pal="${k}" aria-pressed="${(prefs.palette||'')===k}">
+        <span class="tsw" style="--tb:${bg};--ta:${ac};--tn:${nt}"><i></i><i></i><i></i></span><span>${n}</span></button>`).join('')}</div>
     </div>
     <div class="fold-sec">
       <form method="post" action="/logout"><button class="fitem" type="submit">${ic('person')}<span>התנתקות${store.user?` (${esc(store.user)})`:''}</span></button></form>
+      ${store.mode==='db'?`<button class="fitem delacc" id="showDelAcc">${ic('trash')}<span>מחיקת החשבון שלי</span></button>`:''}
     </div>
   </aside>`;
 }
@@ -755,7 +1033,17 @@ function budgetHTML(c){
       <span class="lbl">${c.free<0?'חריגה מעבר לתקציב':bz?'נשאר בעסק אחרי הוצאות':'פנוי להוצאה החודש'}</span>
       <span class="big num">₪${fmt.format(Math.round(Math.abs(c.free)))}</span>
       <p>${c.daysLeft>0&&c.free>0?`בערך ${nis(perDay)} ליום ב-${c.daysLeft} הימים שנשארו`:c.free<0?'כדאי לעצור הוצאות לא הכרחיות עד סוף החודש':c.isCurMonth?'אחרי חיסכון והוצאות':'סיכום החודש אחרי חיסכון והוצאות'}</p>
+      <div class="freebar" aria-hidden="true"><div style="width:${usedPct}%;${usedPct>=100?'background:var(--over)':usedPct>85?'background:var(--warn)':''}"></div></div>
+      <div class="freeline"><span>סה״כ הכנסות <b>${nis(c.income)}</b></span><span>הוצאות עד כה <b>${nis(c.spent)}</b></span></div>
     </div>
+  </section>
+
+  ${summaryBanner(c)}
+  ${catsHTML(c,bz,hasAny)}
+  <div id="noteSlot" hidden></div>
+
+  <div class="folds">
+  ${foldHTML('hero','פירוט החודש',`ניצול מהתקציב הפנוי · <span class="num">${Math.round(usedPct)}%</span>`,`
     <div class="stats">
       <div class="stat"><span class="lbl">סה״כ הכנסות</span><strong>${nis(c.income)}</strong></div>
       <div class="stat"><span class="lbl">הוצאות עד כה</span><strong>${nis(c.spent)}</strong></div>
@@ -766,11 +1054,20 @@ function budgetHTML(c){
       ${c.spent?(()=>{let fx=0;for(const[id,v] of Object.entries(c.spentBy)) if(isFixed(id)) fx+=v;const vr=c.spent-fx;
         return `<div class="stat" style="grid-column:1/-1"><span class="lbl">קבועות ${nis(fx)} · משתנות ${nis(vr)}</span><div class="split"><div style="width:${fx/c.spent*100}%;background:var(--accent)"></div><div style="flex:1;background:var(--pink)"></div></div></div>`})():''}
       <div class="stat" style="grid-column:1/-1"><span class="lbl">ניצול מהתקציב הפנוי · <span class="num">${Math.round(usedPct)}%</span></span><div class="bar"><div style="width:${usedPct}%;${usedPct>=100?'background:var(--over)':usedPct>85?'background:var(--warn)':''}"></div></div></div>
-    </div>
-  </section>
+    </div>`)}
+  ${foldHTML('challenge','אתגר החודש',M.challenge?esc(catOf(M.challenge.c).name):'בוחרים הוצאה אחת לצמצם',challengeHTML(c))}
+  ${foldHTML('goal',esc(B().goalName||M.goalName||'מד החיסכון'),+B().goalTarget?`יעד ${nis(+B().goalTarget)}`:'',goalCardHTML())}
+  ${bz?(()=>{const op=(B().owed||[]).filter(x=>!x.paidAt);return foldHTML('owed','לקוחות שעוד לא שילמו',op.length?`<span class="num">${op.length}</span> לקוחות · ${nis(op.reduce((s,x)=>s+(+x.a||0),0))}`:'כולם שילמו',owedHTML())})():''}
+  ${(()=>{const ins=insights(c);return foldHTML('insights','תובנות לחודש',ins[0]?ins[0][2].replace(/<[^>]+>/g,'').slice(0,70):'',`<div class="panel" data-sec="insights"><ul class="insights">${ins.map(([t,i,txt])=>`<li class="${t}">${ic(i)}<span>${txt}</span></li>`).join('')}</ul></div>`)})()}
+  ${foldHTML('motto','המשפט של החודש',M.motto?esc(M.motto.slice(0,60)):'מטרה או משפט שילווה אותך',`<div class="panel motto" data-sec="motto">
+      <textarea id="motto" maxlength="160" rows="3" placeholder="למשל: החודש חוסכים לטיסה, כל שקל נחשב">${esc(M.motto||'')}</textarea>
+      <span class="saved" id="mottoSaved"></span>
+    </div>`)}
+  </div>`;
+}
 
-  ${summaryBanner(c)}
-  <section class="panel" data-sec="cats">
+function catsHTML(c,bz,hasAny){
+  return `<section class="panel" data-sec="cats">
     <div class="sec-head">
       <h2>${bz?'קטגוריות העסק':'הקטגוריות שלי'}</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -795,20 +1092,6 @@ function budgetHTML(c){
           </form>
         </div>`}).join('')}
       <button class="crow addcat" id="pickCats">${ic('plus')}<span>בחירת קטגוריות</span></button>
-    </div>
-  </section>
-
-  <section class="pair">${challengeHTML(c)}${goalCardHTML()}</section>
-  ${bz?owedHTML():''}
-  <section class="hero duo" style="grid-template-columns:1fr 1fr">
-    <div class="panel" data-sec="insights">
-      <div class="sec-head"><h2>תובנות לחודש</h2></div>
-      <ul class="insights">${insights(c).map(([t,i,txt])=>`<li class="${t}">${ic(i)}<span>${txt}</span></li>`).join('')}</ul>
-    </div>
-    <div class="panel motto" data-sec="motto">
-      <div class="sec-head"><h2>המשפט של החודש</h2><p>מטרה או משפט שילווה אותך</p></div>
-      <textarea id="motto" maxlength="160" rows="3" placeholder="למשל: החודש חוסכים לטיסה, כל שקל נחשב">${esc(M.motto||'')}</textarea>
-      <span class="saved" id="mottoSaved"></span>
     </div>
   </section>`;
 }
@@ -836,7 +1119,7 @@ function chartsHTML(c){
   // budget vs actual
   const bvaRows=cats().map(k=>({k,s:c.spentBy[k.id]||0,b:+M.budgets[k.id]||0})).filter(r=>r.s||r.b).sort((a,b)=>Math.max(b.s,b.b)-Math.max(a.s,a.b)).slice(0,10);
   const bmax=Math.max(1,...bvaRows.map(r=>Math.max(r.s,r.b)));
-  const bva=bvaRows.length?`<div class="bva">${bvaRows.map(r=>{const col=r.b&&r.s>r.b?'var(--over)':r.b&&r.s>=r.b*.85?'var(--warn)':'var(--accent)';
+  const bva=bvaRows.length?`<div class="bva">${bvaRows.map(r=>{const col=r.b&&r.s>r.b?'var(--over)':r.b&&r.s>=r.b*.85&&!isFixed(r.k.id)?'var(--warn)':'var(--accent)';
     return `<div class="r">${cic(r.k.id)}<div><div class="top"><span>${esc(catName(r.k))}</span><span>${nis(r.s)}${r.b?` מתוך ${nis(r.b)}`:''}</span></div>
       <div class="track"><div class="fill" style="width:${r.s/bmax*100}%;background:${col}"></div>${r.b?`<div class="mark" style="inset-inline-start:calc(${r.b/bmax*100}% - 1px)" title="תקציב"></div>`:''}</div></div></div>`}).join('')}</div>
     <div class="keyrow" style="margin-top:12px"><span><i style="background:var(--accent)"></i>הוצאה בפועל</span><span><i style="background:var(--fg);width:3px"></i>התקציב שנקבע</span></div>`
@@ -900,18 +1183,20 @@ function render(){
   <div class="layout ${noNotes?'solo':''}"><div class="main">
   ${view==='charts'?chartsHTML(c):view==='calendar'?calHTML():view==='search'?searchHTML():view==='calc'?calcHTML():view==='backup'?backupHTML():budgetHTML(c)}
   </div>
-  ${noNotes?'':`<aside class="panel notes" aria-label="פתקים">
-    <h2>פתקים</h2>
-    <p class="sub">תזכורות, תשלומים שמגיעים, דברים לקנות. נשמר לחודש ${MONTHS[cur.getMonth()]}${biz()?` של ${esc(B().name)}`:''}.</p>
+  ${noNotes?'':`<aside class="notes" aria-label="פתקים">
+    <div class="note-head"><h2>פתקים</h2><span class="lbl">${MONTHS[cur.getMonth()]}${biz()?` · ${esc(B().name)}`:''}</span></div>
     <textarea id="notes" placeholder="למשל: לבטל מנוי שלא בשימוש, לשלם ביטוח רכב ב-15…">${esc(M.notes||'')}</textarea>
     <span class="saved" id="notesSaved"></span>
   </aside>`}</div>
   </div>
   ${view==='budget'?`<button class="fab" id="fab" aria-label="הוספת הוצאה מהירה">${ic('plus')}</button>`:''}
-  ${openCat?sheetHTML(c):''}${pickOpen?pickHTML():''}${quickOpen?quickHTML():''}${view==='calendar'&&dayOpen?dayHTML():''}${editExp?editHTML():''}${custOpen?custHTML():''}${reportOpen?reportHTML():''}${onbStep>=0?onbHTML():''}`;
+  ${openCat?sheetHTML(c):''}${pickOpen?pickHTML():''}${quickOpen?quickHTML():''}${view==='calendar'&&dayOpen?dayHTML():''}${editExp?editHTML():''}${custOpen?custHTML():''}${reportOpen?reportHTML():''}${recOpen?recHTML():''}${delOpen?delHTML():''}${onbStep>=0?onbHTML():''}`;
+  // on narrow screens the sticky note sits right under the categories instead of at the bottom
+  try{if(matchMedia('(max-width:900px)').matches){const s=document.getElementById('noteSlot'),n=app.querySelector('.notes');if(s&&n)s.replaceWith(n)}}catch(e){}
   translateDOM(app);
   bind();
 }
+try{matchMedia('(max-width:900px)').addEventListener('change',()=>{if(loaded)render()})}catch(e){}
 
 function pickHTML(){
   const sel=selCats();
@@ -1340,6 +1625,87 @@ function editHTML(){
   </div>`;
 }
 
+/* ----- recovery code (for "forgot password" without email) ----- */
+/* ----- delete my account ----- */
+let delOpen=false, delMsg='', delBusy=false;
+function delHTML(){
+  return `<div class="scrim" id="delScrim" style="z-index:22"></div>
+  <div class="daymodal" style="z-index:23" role="alertdialog" aria-modal="true" aria-labelledby="delTitle" aria-describedby="delDesc">
+    <div class="sheet-head"><div><h2 id="delTitle">מחיקת החשבון שלי</h2><span class="lbl">${esc(store.user||'')}</span></div><button class="close" id="delClose" aria-label="סגירה" ${delBusy?'disabled':''}>✕</button></div>
+    <div class="delwarn" id="delDesc">
+      <b>המחיקה היא לצמיתות ואי אפשר לבטל אותה.</b>
+      <span>יימחקו כל החשבונות (גם של עסק), כל החודשים וההוצאות, התקציבים, הפתקים, היומן וקוד השחזור. שם המשתמש יתפנה, ולא נוכל לשחזר שום דבר.</span>
+    </div>
+    <p class="rectext">רוצה לשמור עותק לפני? <button class="linkbtn" id="delBackup" type="button" style="color:var(--accent)">להורדת גיבוי</button></p>
+    <form class="addform" id="delForm">
+      <label class="full lbl" for="delPw">כדי לאשר, מזינים את הסיסמה</label>
+      <input class="txtin full" id="delPw" type="password" autocomplete="current-password" required ${delBusy?'disabled':''}>
+      ${delMsg?`<p class="recerr full" role="alert">${esc(delMsg)}</p>`:''}
+      <button class="danger full" type="submit" ${delBusy?'disabled':''}>${delBusy?'מוחקים…':'מחיקת החשבון לצמיתות'}</button>
+      <button class="ghost full" type="button" id="delCancel" ${delBusy?'disabled':''}>ביטול</button>
+    </form>
+  </div>`;
+}
+async function deleteAccount(pw){
+  delBusy=true;delMsg='';render();
+  try{
+    const r=await fetch('/api/account/delete',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    if(r.ok){
+      // forget this browser's local leftovers too (last account, open sections, tour flag...)
+      try{Object.keys(localStorage).filter(k=>k.startsWith('kis-')).forEach(k=>localStorage.removeItem(k))}catch(_){}
+      location.replace('/');return;
+    }
+    delMsg=r.status===403?'הסיסמה לא נכונה':r.status===429?'יותר מדי ניסיונות. אפשר לנסות שוב בעוד רבע שעה':r.status===401?'החיבור לחשבון פג. צריך להיכנס מחדש':'משהו השתבש, החשבון לא נמחק. כדאי לנסות שוב';
+  }catch(e){delMsg='אין חיבור לשרת כרגע, החשבון לא נמחק'}
+  delBusy=false;render();setTimeout(()=>document.getElementById('delPw')?.focus(),30);
+}
+function bindDel($,on){
+  on('showDelAcc','click',()=>{delOpen=true;delMsg='';folderOpen=false;render();setTimeout(()=>$('delPw')?.focus(),40)});
+  const close=()=>{if(delBusy)return;delOpen=false;delMsg='';render()};
+  on('delClose','click',close);on('delCancel','click',close);on('delScrim','click',close);
+  on('delBackup','click',()=>{delOpen=false;view='backup';remember();render()});
+  on('delForm','submit',e=>{e.preventDefault();const pw=$('delPw').value;if(pw&&!delBusy)deleteAccount(pw)});
+}
+
+let recOpen=false, recCode='', recMsg='', recBusy=false;
+function closeRec(){recOpen=false;recCode='';recMsg='';render()}
+function recHTML(){
+  return `<div class="scrim" id="recScrim" style="z-index:22"></div>
+  <div class="daymodal" style="z-index:23" role="dialog" aria-modal="true" aria-label="קוד שחזור">
+    <div class="sheet-head"><div><h2>קוד שחזור</h2><span class="lbl">${store.hasRecovery?'יש לך קוד שחזור פעיל':'עוד לא נוצר קוד שחזור'}</span></div><button class="close" id="recClose" aria-label="סגירה">✕</button></div>
+    ${recCode?`<p class="rectext">זה קוד השחזור החדש שלך. הקוד הקודם, אם היה, כבר לא עובד.</p>
+      <div class="reccode" dir="ltr">${esc(recCode)}</div>
+      <div class="recbtns"><button class="ghost" id="recCopy">העתקה</button><button class="ghost" id="recSave">שמירה כקובץ</button></div>
+      <p class="recwarn"><b>חשוב לשמור את הקוד עכשיו.</b> הוא יוצג רק הפעם. אפשר לצלם מסך, לכתוב על דף או לשמור במנהל סיסמאות.</p>
+      <button class="primary" id="recDone">שמרתי, סיום</button>`
+    :`<p class="rectext">אם הסיסמה תישכח, הקוד מאפשר לבחור סיסמה חדשה בדף "שכחתי סיסמה", בלי מייל. ${store.hasRecovery?'יצירת קוד חדש מבטלת את הקוד הקודם.':''}</p>
+      <form class="addform" id="recForm">
+        <label class="full lbl" for="recPw">כדי להמשיך, מזינים את הסיסמה הנוכחית</label>
+        <input class="txtin full" id="recPw" type="password" autocomplete="current-password" required>
+        ${recMsg?`<p class="recerr full" role="alert">${esc(recMsg)}</p>`:''}
+        <button class="primary full" type="submit" ${recBusy?'disabled':''}>${store.hasRecovery?'יצירת קוד חדש':'יצירת קוד שחזור'}</button>
+      </form>`}
+  </div>`;
+}
+async function makeRec(pw){
+  recBusy=true;recMsg='';render();
+  try{
+    const r=await fetch('/api/recovery',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    if(r.ok){recCode=(await r.json()).code;store.hasRecovery=true}
+    else recMsg=r.status===403?'הסיסמה לא נכונה':r.status===429?'יותר מדי ניסיונות. אפשר לנסות שוב בעוד רבע שעה':'משהו השתבש, כדאי לנסות שוב';
+  }catch(e){recMsg='אין חיבור לשרת כרגע'}
+  recBusy=false;render();
+  if(!recCode) setTimeout(()=>document.getElementById('recPw')?.focus(),30);
+}
+function bindRec($,on){
+  on('showRec','click',()=>{recOpen=true;folderOpen=false;render();setTimeout(()=>$('recPw')?.focus(),40)});
+  on('recClose','click',closeRec);on('recScrim','click',()=>{if(!recCode)closeRec()});on('recDone','click',closeRec);
+  on('recForm','submit',e=>{e.preventDefault();const pw=$('recPw').value;if(pw&&!recBusy)makeRec(pw)});
+  on('recCopy','click',async e=>{const b=e.currentTarget;try{await navigator.clipboard.writeText(recCode);b.textContent=tr('הועתק')}catch(_){const el=document.querySelector('.reccode');const rg=document.createRange();rg.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(rg)}});
+  on('recSave','click',async()=>{const txt=`Flow – קוד שחזור\nשם משתמש: ${store.user||''}\nקוד: ${recCode}\n\nבעזרת הקוד אפשר לאפס סיסמה בדף "שכחתי סיסמה".\n`;
+    try{const dl=await window.claude?.use?.('downloads');await dl.save({filename:'flow-recovery-code.txt',data:txt})}catch(_){}});
+}
+
 /* ----- screen chooser (#5) ----- */
 function custHTML(){
   const h=prefs.hidden||[];
@@ -1354,8 +1720,8 @@ function custHTML(){
 /* ----- onboarding (#7) ----- */
 const ONB=[
   ['ברוכים הבאים ל-Flow','כאן מנהלים את הכסף של כל חודש: כמה נכנס, כמה יוצא וכמה נשאר. הכול נשמר באופן פרטי, ורק לך יש גישה לנתונים שלך.','wallet'],
-  ['מתחילים מההכנסה','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול בתכלת מראה כמה נשאר להוציא, וכמה זה יוצא ליום.','coins'],
-  ['מוסיפים הוצאות','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור הוורוד בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.','plus'],
+  ['מתחילים מההכנסה','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול מראה כמה נשאר להוציא, וכמה זה יוצא ליום.','coins'],
+  ['מוסיפים הוצאות','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור העגול בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.','plus'],
   ['התיקייה בצד','בתיקייה יש חשבונות נוספים (למשל עסק), דיאגרמות, יומן, חיפוש, מחשבון וגיבוי. בטלפון פותחים אותה מכפתור התיקייה ליד הכותרת.','folder']
 ];
 function onbHTML(){
@@ -1592,14 +1958,14 @@ const EN={
 // chooser & report & onboarding
 'בוחרים מה יוצג במסך ניהול החודש':'Choose what appears on the month screen','הסכום הפנוי והסיכום':'Free amount & overview','קטגוריות':'Categories','לקוחות שלא שילמו (בעסק)':'Unpaid clients (business)',
 'סיכום החודש להורדה ':'Month summary download','להורדה':'to download','הכנסות, הוצאות וחיסכון של החודש':'This month’s income, expenses and savings','מכינים את הסיכום…':'Preparing the summary…','שמירה כתמונה':'Save as image','שמירה כקובץ PDF':'Save as PDF','תצוגה מקדימה של סיכום החודש':'Month summary preview','לא הצלחתי להכין את הסיכום':'Couldn’t prepare the summary',
-'ברוכים הבאים ל-Flow':'Welcome to Flow','כאן מנהלים את הכסף של כל חודש: כמה נכנס, כמה יוצא וכמה נשאר. הכול נשמר באופן פרטי, ורק לך יש גישה לנתונים שלך.':'Manage each month’s money here: what comes in, what goes out and what’s left. Everything is saved privately, and only you can access your data.','מתחילים מההכנסה':'Start with income','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול בתכלת מראה כמה נשאר להוציא, וכמה זה יוצא ליום.':'Enter this month’s salary and a savings goal at the top. The big blue number shows how much is left to spend, and how much that is per day.','מוסיפים הוצאות':'Add expenses','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור הוורוד בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.':'Type an amount in the clear box of any category and press +. You can also use the round button in the corner. Tapping a category name opens its budget, recurring expenses and more. Choosing your categories is at the end of the list.','התיקייה בצד':'The side folder','בתיקייה יש חשבונות נוספים (למשל עסק), דיאגרמות, יומן, חיפוש, מחשבון וגיבוי. בטלפון פותחים אותה מכפתור התיקייה ליד הכותרת.':'The folder has more accounts (like a business), charts, calendar, search, calculator and backup. On a phone, open it with the folder button next to the title.','יאללה, מתחילים':'Let’s go',
+'ברוכים הבאים ל-Flow':'Welcome to Flow','כאן מנהלים את הכסף של כל חודש: כמה נכנס, כמה יוצא וכמה נשאר. הכול נשמר באופן פרטי, ורק לך יש גישה לנתונים שלך.':'Manage each month’s money here: what comes in, what goes out and what’s left. Everything is saved privately, and only you can access your data.','מתחילים מההכנסה':'Start with income','למעלה מזינים את המשכורת של החודש ויעד חיסכון. הסכום הגדול מראה כמה נשאר להוציא, וכמה זה יוצא ליום.':'Enter this month’s salary and a savings goal at the top. The big blue number shows how much is left to spend, and how much that is per day.','מוסיפים הוצאות':'Add expenses','בכל קטגוריה מקלידים סכום בריבוע השקוף ולוחצים +. אפשר גם להשתמש בכפתור העגול בפינה. לחיצה על שם הקטגוריה פותחת תקציב, הוצאות קבועות ועוד. בחירת הקטגוריות שרלוונטיות לך נמצאת בסוף הרשימה.':'Type an amount in the clear box of any category and press +. You can also use the round button in the corner. Tapping a category name opens its budget, recurring expenses and more. Choosing your categories is at the end of the list.','התיקייה בצד':'The side folder','בתיקייה יש חשבונות נוספים (למשל עסק), דיאגרמות, יומן, חיפוש, מחשבון וגיבוי. בטלפון פותחים אותה מכפתור התיקייה ליד הכותרת.':'The folder has more accounts (like a business), charts, calendar, search, calculator and backup. On a phone, open it with the folder button next to the title.','יאללה, מתחילים':'Let’s go',
 // report canvas
 'הופק ב-':'Generated on','הכנסות ':'Income','נחסך':'Saved','נשאר פנוי':'Left free','חיסכון':'Savings','יעד החיסכון החודשי':'Monthly savings goal','· הושגו':'· achieved','% מהיעד':'% of goal','לא הוגדר יעד חיסכון החודש':'No savings goal set this month','הופרש לחיסכון למטרה':'Set aside for savings goal','הושקע:':'Invested:','אתגר החודש (':'Monthly challenge (','· הצלחה!':'· success!','מע״מ להעברה (בערך):':'VAT to pay (approx.):','באשראי, יורד בחודש הבא:':'On credit, charged next month:','קבועות מול משתנות':'Fixed vs variable','הוצאות לפי קטגוריה':'Expenses by category','לא נרשמו הוצאות החודש':'No expenses recorded this month','ועוד':'and','קטגוריות נוספות':'more categories','Flow · ניהול כסף חכם ומסודר':'Flow · smart, organized money management',
 // sample data notes
 'שופרסל':'Supermarket','רמי לוי':'Grocery store','לק ג׳ל':'Gel polish','ארוחה עם חברות':'Dinner with friends','אוכל לחתול':'Cat food','מנוי לחדר כושר':'Gym membership','נעליים':'Shoes','דלק':'Fuel','נטפליקס וספוטיפיי':'Netflix & Spotify','ביטוח בריאות':'Health insurance',
 'סוג':'Type','תיאור':'Description','תאריך':'Date','קבועה':'Fixed','משתנה':'Variable','אשראי לחודש הבא':'Credit next month','נשאר':'Left','להשאיר בעסק':'Keep in business','יעד חיסכון':'Savings goal','מע״מ להעברה (בערך)':'VAT to pay (approx.)',
 'ל-':'for',
-'פילוח הוצאות לפי קטגוריה':'Expenses by category','תכלת וורוד':'Blue & pink','תכלת וירוק ים':'Blue & teal','תכלת וכחול':'Blue & indigo','למשל: סידור ארונות':'e.g. closet organizing','התנתקות':'Sign out'
+'פילוח הוצאות לפי קטגוריה':'Expenses by category','תכלת וורוד':'Blue & pink','תכלת וירוק ים':'Blue & teal','תכלת וכחול':'Blue & indigo','למשל: סידור ארונות':'e.g. closet organizing','התנתקות':'Sign out','מחיקת החשבון שלי':'Delete my account','המחיקה היא לצמיתות ואי אפשר לבטל אותה.':'Deletion is permanent and can’t be undone.','יימחקו כל החשבונות (גם של עסק), כל החודשים וההוצאות, התקציבים, הפתקים, היומן וקוד השחזור. שם המשתמש יתפנה, ולא נוכל לשחזר שום דבר.':'All accounts (business ones too), months and expenses, budgets, notes, calendar and recovery code will be deleted. The username will be freed, and nothing can be restored.','רוצה לשמור עותק לפני?':'Want to keep a copy first?','להורדת גיבוי':'Download a backup','כדי לאשר, מזינים את הסיסמה':'Enter your password to confirm','מחיקת החשבון לצמיתות':'Delete account permanently','מוחקים…':'Deleting…','החיבור לחשבון פג. צריך להיכנס מחדש':'Your session expired. Please sign in again','משהו השתבש, החשבון לא נמחק. כדאי לנסות שוב':'Something went wrong, the account was not deleted. Please try again','אין חיבור לשרת כרגע, החשבון לא נמחק':'Can’t reach the server, the account was not deleted','קוד שחזור':'Recovery code','לא נוצר':'not set','יש לך קוד שחזור פעיל':'You have an active recovery code','עוד לא נוצר קוד שחזור':'No recovery code yet','זה קוד השחזור החדש שלך. הקוד הקודם, אם היה, כבר לא עובד.':'This is your new recovery code. Any previous code no longer works.','העתקה':'Copy','הועתק':'Copied','שמירה כקובץ':'Save as file','חשוב לשמור את הקוד עכשיו.':'Save the code now.','הוא יוצג רק הפעם. אפשר לצלם מסך, לכתוב על דף או לשמור במנהל סיסמאות.':'It is shown only this once. Take a screenshot, write it down or keep it in a password manager.','שמרתי, סיום':'Saved it, done','כדי להמשיך, מזינים את הסיסמה הנוכחית':'Enter your current password to continue','יצירת קוד חדש':'Create a new code','יצירת קוד שחזור':'Create recovery code','הסיסמה לא נכונה':'Wrong password','יותר מדי ניסיונות. אפשר לנסות שוב בעוד רבע שעה':'Too many attempts. Try again in 15 minutes','משהו השתבש, כדאי לנסות שוב':'Something went wrong, please try again','אין חיבור לשרת כרגע':'Can’t reach the server right now','יצירת קוד חדש מבטלת את הקוד הקודם.':'Creating a new code cancels the previous one.','פירוט החודש':'Month details','יעד':'Goal','כחול אפור':'Blue gray','ירוק ים':'Sea green','כחול סגלגל':'Indigo','צבע ההדגשה':'Accent color','ערכת צבעים':'Color theme','כחול':'Blue','בז׳':'Beige','ורוד בהיר':'Light pink','מרווה':'Sage','לילך':'Lilac'
 };
 const EN_MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const EN_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1646,6 +2012,8 @@ function bind(){
   const on=(id,ev,fn)=>{const el=$(id);if(el) el.addEventListener(ev,fn)};
   bindExtras($,on);
   bindExtras2($,on);
+  bindRec($,on);
+  bindDel($,on);
   document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{prefs.lang=b.dataset.lang==='en'?'en':'he';saveBooks();render()});
   document.querySelectorAll('[data-pal]').forEach(b=>b.onclick=()=>{prefs.palette=b.dataset.pal||'';saveBooks();render()});
   on('vatType','change',e=>{B().vat=e.target.value;saveBooks();render()});
@@ -1667,6 +2035,7 @@ function bind(){
   // budget view
   for(const f of ['salary','extra','savings']) on(f,'change',e=>{M[f]=Math.max(0,+e.target.value||0);persist();render();$(f)?.focus()});
   on('motto','input',e=>{M.motto=e.target.value;$('mottoSaved').textContent=tr(isSample?'בדוגמה זה לא נשמר':'נשמר');persist()});
+  document.querySelectorAll('details[data-fold]').forEach(d=>d.addEventListener('toggle',()=>{const k=d.dataset.fold;if(d.open)folds.add(k);else folds.delete(k);try{localStorage.setItem('kis-folds',JSON.stringify([...folds]))}catch(e){}}));
   on('notes','input',e=>{M.notes=e.target.value;$('notesSaved').textContent=tr(isSample?'בדוגמה הפתקים לא נשמרים':'נשמר');persist()});
   on('names','change',e=>{showNames=e.target.checked;try{localStorage.setItem('kis-names',showNames?'1':'0')}catch(_){};render()});
   document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{openCat=b.dataset.cat;render();setTimeout(()=>$('eAmt')?.focus(),50)});
@@ -1716,7 +2085,7 @@ function bind(){
       setTimeout(()=>$('eAmt')?.focus(),30)});
   }
 }
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(onbStep>=0){finishOnb()}else if(editExp){editExp=null;render()}else if(reportOpen){reportOpen=false;render()}else if(custOpen){custOpen=false;render()}else if(dayOpen){dayOpen=false;render()}else if(quickOpen){quickOpen=false;render()}else if(pickOpen){pickOpen=false;render()}else if(openCat){openCat=null;render()}else if(folderOpen){folderOpen=false;render()}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(onbStep>=0){finishOnb()}else if(editExp){editExp=null;render()}else if(reportOpen){reportOpen=false;render()}else if(custOpen){custOpen=false;render()}else if(recOpen){closeRec()}else if(delOpen&&!delBusy){delOpen=false;delMsg='';render()}else if(dayOpen){dayOpen=false;render()}else if(quickOpen){quickOpen=false;render()}else if(pickOpen){pickOpen=false;render()}else if(openCat){openCat=null;render()}else if(folderOpen){folderOpen=false;render()}});
 
 function sample(){
   const k=keyOf(cur),D=n=>`${k}-${String(n).padStart(2,'0')}`;let i=0;

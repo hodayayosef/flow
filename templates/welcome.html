@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Flow · ניהול כסף חודשי פשוט ופרטי</title>
+<meta name="description" content="Flow הוא אתר לניהול כסף חודשי: מעקב הוצאות לפי קטגוריות, יעדי חיסכון, יומן ותזכורות לתשלומים. פשוט, בעברית, והנתונים שלך פרטיים לגמרי.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:site_name" content="Flow">
+<meta property="og:title" content="Flow · ניהול כסף חודשי פשוט ופרטי">
+<meta property="og:description" content="מעקב הוצאות לפי קטגוריות, חיסכון ויעדים, יומן ותזכורות. הנתונים שלך פרטיים לגמרי.">
+<meta name="twitter:card" content="summary">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/static/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+<meta name="theme-color" content="#f5f6f8">
+<link rel="stylesheet" href="/static/fonts.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Flow","inLanguage":"he","applicationCategory":"FinanceApplication","operatingSystem":"Web",
+ "description":"אתר לניהול כסף חודשי: מעקב הוצאות לפי קטגוריות, יעדי חיסכון, יומן ותזכורות. פשוט ופרטי.",
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"ILS"}}
+</script>
+<style>
+/* same tokens as the app (default blue theme) */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --surface-2:#f0f2f5; --fg:#1f2d3d; --muted:#667487; --line:#e4e8ed;
+  --accent:#3f6d8e; --accent-soft:#e9eff4; --track:#e5e9ee; --note:#fdf3c8; --note-line:#efe0a6; --note-head:#7a5d1e;
+  --r:10px; --r-s:6px; --tap:48px;
+  --body:"Rubik","Assistant",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f;
+  --accent:#8fb3d0; --accent-soft:#223140; --track:#26303b; --note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171d; --surface:#192029; --surface-2:#202833; --fg:#e4e9ef; --muted:#93a0af; --line:#2a333f;
+  --accent:#8fb3d0; --accent-soft:#223140; --track:#26303b; --note:#2a2a22; --note-line:#3a3a2e; --note-head:#d9c48a; color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:max(20px,env(safe-area-inset-left,0px)) max(20px,env(safe-area-inset-right,0px))}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+svg.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:1.25rem;text-decoration:none}
+.mark{width:36px;height:36px;border-radius:var(--r-s);background:var(--accent);color:var(--surface);display:grid;place-items:center}
+.mark svg.ic{width:20px;height:20px;stroke-width:2}
+.bar a.link{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:var(--r-s);text-decoration:none;font-weight:500}
+.bar a.link:hover{background:var(--surface)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 26px;border-radius:var(--r-s);font-weight:600;font-size:1.02rem;text-decoration:none;transition:filter .15s,background .15s}
+.btn.primary{background:var(--accent);color:var(--surface)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--surface);color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{background:var(--accent-soft)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:center;padding-block:40px 56px}
+.hero h1{font-size:clamp(2.6rem,7vw,3.6rem);line-height:1.05;font-weight:600;letter-spacing:-.01em;margin:0;color:var(--accent)}
+.hero .lead{font-size:clamp(1.15rem,2.6vw,1.4rem);font-weight:500;margin:14px 0 6px;max-width:30ch;text-wrap:balance}
+.hero .sub{color:var(--muted);margin:0 0 26px;max-width:44ch}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.ctas .hint{flex-basis:100%;color:var(--muted);font-size:.88rem;margin-top:4px}
+
+/* preview: a small, static picture of the app */
+.preview{position:relative;padding-block:12px}
+.pcard{background:var(--surface);border-radius:var(--r);padding:22px;box-shadow:0 1px 2px rgb(20 30 45 / .04),0 18px 40px -24px rgb(20 30 45 / .25)}
+.pcard .lbl{font-size:.82rem;color:var(--muted)}
+.pcard .big{font-size:2.4rem;font-weight:600;color:var(--accent);line-height:1.15}
+.pcard .per{color:var(--muted);font-size:.92rem;margin:2px 0 12px}
+.pbar{height:6px;border-radius:3px;background:var(--track);overflow:hidden}
+.pbar i{display:block;height:100%;width:64%;background:var(--accent)}
+.prows{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.prow{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:var(--r-s);padding:8px 10px;border-inline-start:3px solid var(--accent)}
+.prow .ring{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--track) 0)}
+.prow .ring span{width:25px;height:25px;border-radius:50%;background:var(--surface);display:grid;place-items:center;color:var(--accent)}
+.prow .ring svg.ic{width:14px;height:14px}
+.prow b{font-weight:600;font-size:.92rem;flex:1}
+.prow small{color:var(--muted);font-size:.82rem}
+.pnote{position:absolute;inset-inline-start:-18px;bottom:-26px;width:170px;background:var(--note);color:var(--fg);padding:14px 14px 10px;border-radius:3px 3px 3px 12px;transform:rotate(-3deg);
+  box-shadow:0 10px 22px -10px rgb(60 45 20 / .3);font-size:.88rem;line-height:28px;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 27px,var(--note-line) 27px 28px);background-position:0 40px}
+.pnote strong{display:block;color:var(--note-head);font-weight:600;line-height:1.4;margin-bottom:2px}
+
+/* features */
+.features{padding-block:24px 40px}
+.features h2{font-size:1.35rem;font-weight:600;margin:0 0 18px}
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.fgrid li{background:var(--surface);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgb(20 30 45 / .04)}
+.ficon{flex:none;width:44px;height:44px;border-radius:var(--r-s);background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.fgrid h3{margin:4px 0 0;font-size:1.05rem;font-weight:600}
+.fgrid p{margin:0;color:var(--muted);font-size:.94rem}
+
+/* closing call to action */
+.end{background:var(--surface);border-radius:var(--r);padding:28px;display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-bottom:28px}
+.end p{margin:0;font-size:1.15rem;font-weight:500}
+footer{color:var(--muted);font-size:.85rem;padding-block:8px 32px;text-align:center}
+
+@media (max-width:900px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;gap:28px;padding-block:20px 48px}
+  .preview{max-width:440px;margin-inline:auto;width:100%}
+  .pnote{inset-inline-start:auto;inset-inline-end:-6px;bottom:-30px;width:150px}
+}
+@media (max-width:520px){
+  .fgrid{grid-template-columns:1fr}
+  .fgrid li{flex-direction:row;align-items:flex-start;gap:14px;padding:16px}
+  .fgrid h3{margin:0}
+  .ctas .btn{flex:1 1 140px}
+  .end{padding:20px}
+  .end .btn{width:100%}
+  .pnote{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap bar">
+  <a class="brand" href="/" aria-label="Flow, דף הבית">
+    <span class="mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg></span>
+    Flow
+  </a>
+  <a class="link" href="/login">כניסה</a>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div>
+      <h1>Flow</h1>
+      <p class="lead">ניהול כסף חודשי, פשוט ופרטי.</p>
+      <p class="sub">רואים כמה נכנס, כמה יצא וכמה נשאר להוציא החודש. בלי טבלאות מסובכות, בעברית, והנתונים נשארים רק אצלך.</p>
+      <div class="ctas">
+        <a class="btn primary" href="/register">הרשמה</a>
+        <a class="btn ghost" href="/login">כניסה</a>
+        <span class="hint">ההרשמה חינמית ולוקחת פחות מדקה</span>
+      </div>
+    </div>
+
+    <div class="preview" aria-hidden="true">
+      <div class="pcard">
+        <div class="lbl">פנוי להוצאה החודש</div>
+        <div class="big num">₪2,677</div>
+        <div class="per">בערך ₪191 ליום ב-14 הימים שנשארו</div>
+        <div class="pbar"><i></i></div>
+        <div class="prows">
+          <div class="prow"><span class="ring" style="--p:100"><span><svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span></span><b>שכר דירה</b><small class="num">₪3,600</small></div>
+          <div class="prow"><span class="ring" style="--p:64"><span><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/><path d="M3 4h2l2.5 11h11L21 7H6.2"/></svg></span></span><b>סופר</b><small class="num">₪900</small></div>
+          <div class="prow"><span class="ring" style="--p:30"><span><svg class="ic" viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10"/><path d="M17 3c-2.2 2-2.2 6 0 8v10"/></svg></span></span><b>אוכל בחוץ</b><small class="num">₪138</small></div>
+        </div>
+      </div>
+      <div class="pnote"><strong>פתקים</strong>לשלם ביטוח ב-15<br>מתנה לאמא</div>
+    </div>
+  </section>
+
+  <section class="wrap features" aria-labelledby="whyTitle">
+    <h2 id="whyTitle">מה יש ב-Flow</h2>
+    <ul class="fgrid">
+      <li>
+        <span class="ficon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 109 9h-9z"/><path d="M15 2.5A9 9 0 0121.5 9H15z"/></svg></span>
+        <div><h3>מעקב הוצאות לפי קטגוריות</h3><p>סופר, שכר דירה, בילויים ועוד. מוסיפים סכום בלחיצה ורואים מיד כמה נשאר בכל קטגוריה.</p></div>
+      </li>
+      <li>
+        <span class="ficon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <div><h3>חיסכון ויעדים</h3><p>קובעים יעד חיסכון לחודש ומטרה גדולה, ורואים מתי מגיעים אליה בקצב הנוכחי.</p></div>
+      </li>
+      <li>
+        <span class="ficon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+        <div><h3>יומן ותזכורות</h3><p>תשלומים קבועים, ימי הולדת ופגישות במקום אחד, עם תזכורת כשמשהו מתקרב.</p></div>
+      </li>
+      <li>
+        <span class="ficon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <div><h3>פרטיות מלאה</h3><p>כל חשבון פרטי לגמרי. רק לך יש גישה לנתונים שלך, ואפשר להוריד גיבוי בכל רגע.</p></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap">
+    <div class="end">
+      <p>מוכנים לחודש מסודר יותר?</p>
+      <a class="btn primary" href="/register">פתיחת חשבון</a>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">Flow · ניהול כסף חודשי פשוט ופרטי</footer>
+</body>
+</html>

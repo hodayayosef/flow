@@ -2,3 +2,8 @@
 __pycache__/
 data/
 *.pyc
+.DS_Store
+static_backup_*/
+*.sqlite3
+*.key
+.env

@@ -12,11 +12,14 @@ import re
 import secrets
 import socket
 import sqlite3
+import threading
 import time
 from functools import wraps
 
 from flask import (Flask, abort, g, jsonify, redirect, render_template,
                    request, send_from_directory, session, url_for)
+from flask.sessions import SecureCookieSessionInterface
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -48,12 +51,28 @@ app.config.update(
 )
 
 
+class AdaptiveSessionInterface(SecureCookieSessionInterface):
+    """Mark the sign-in cookie Secure whenever the request came over https.
+    Plain http (this computer or the home Wi-Fi) keeps working, because there a Secure cookie would be dropped."""
+    def get_cookie_secure(self, app):
+        return request.is_secure
+
+
+app.session_interface = AdaptiveSessionInterface()
+
+# Behind an https proxy (nginx, Caddy, Cloudflare tunnel...) set TRUST_PROXY=1, so the app sees the real
+# visitor address (for the attempt limit) and knows the visit was https (for the Secure cookie).
+if os.environ.get("TRUST_PROXY") == "1":
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+
 # ---------------------------------------------------------------- database
 def db() -> sqlite3.Connection:
     if "db" not in g:
         g.db = sqlite3.connect(DB_PATH)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON")
+        g.db.execute("PRAGMA secure_delete = ON")   # deleted data is overwritten, not left behind in the file
     return g.db
 
 
@@ -83,8 +102,99 @@ def init_db():
         );
         """
     )
+    # recovery code (stored hashed, like the password); added later, so older databases get the column here
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(users)")}
+    if "recovery_hash" not in cols:
+        conn.execute("ALTER TABLE users ADD COLUMN recovery_hash TEXT")
     conn.commit()
     conn.close()
+
+
+# ---------------------------------------------------------------- recovery codes
+# 16 characters from an alphabet without look-alikes (no 0/O, 1/I/L), shown as XXXX-XXXX-XXXX-XXXX (~80 bits)
+CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+
+
+def new_recovery_code() -> str:
+    raw = "".join(secrets.choice(CODE_ALPHABET) for _ in range(16))
+    return "-".join(raw[i:i + 4] for i in range(0, 16, 4))
+
+
+def normalize_code(code: str) -> str:
+    return re.sub(r"[^A-Z0-9]", "", (code or "").upper())
+
+
+def hash_secret(value: str) -> str:
+    return generate_password_hash(value, method="pbkdf2:sha256")
+
+
+def set_recovery_code(user_id: int) -> str:
+    """Create a fresh code for the user, store only its hash, and return the plain code to show once."""
+    code = new_recovery_code()
+    db().execute("UPDATE users SET recovery_hash = ? WHERE id = ?", (hash_secret(normalize_code(code)), user_id))
+    db().commit()
+    return code
+
+
+# ---------------------------------------------------------------- failed-attempt limit
+# After 5 wrong tries for the same username, or from the same address, that key is blocked for 15 minutes
+# (counted from the 5th failure). Kept in memory, so a server restart clears it.
+FAILS: dict = {}     # key -> times of recent failures
+BLOCKS: dict = {}    # key -> time the block ends
+FAIL_LIMIT, FAIL_WINDOW = 5, 15 * 60
+FAILS_LOCK = threading.Lock()
+
+
+def attempt_keys(kind: str, username: str) -> tuple:
+    return (f"{kind}:u:{username.strip().lower()}", f"{kind}:ip:{request.remote_addr or ''}")
+
+
+def blocked_for(*keys) -> int:
+    """Seconds left on the longest active block among the keys (0 = not blocked)."""
+    now, left = time.time(), 0
+    with FAILS_LOCK:
+        for k in keys:
+            until = BLOCKS.get(k, 0)
+            if until > now:
+                left = max(left, int(until - now) + 1)
+            else:
+                BLOCKS.pop(k, None)
+    return left
+
+
+def too_many_fails(*keys) -> bool:
+    return blocked_for(*keys) > 0
+
+
+def note_fail(*keys):
+    now = time.time()
+    with FAILS_LOCK:
+        for k in keys:
+            recent = [t for t in FAILS.get(k, []) if now - t < FAIL_WINDOW] + [now]
+            if len(recent) >= FAIL_LIMIT:
+                BLOCKS[k] = now + FAIL_WINDOW   # 15 minutes from the 5th failure
+                FAILS.pop(k, None)
+            else:
+                FAILS[k] = recent
+        # drop stale entries so the dictionaries don't grow forever
+        if len(FAILS) > 10000:
+            for k in [k for k, v in FAILS.items() if now - v[-1] >= FAIL_WINDOW]:
+                del FAILS[k]
+
+
+def clear_fails(*keys):
+    with FAILS_LOCK:
+        for k in keys:
+            FAILS.pop(k, None)
+
+
+def blocked_message(seconds: int) -> str:
+    minutes = max(1, -(-seconds // 60))
+    when = "בעוד דקה" if minutes == 1 else f"בעוד {minutes} דקות"
+    return f"היו יותר מדי ניסיונות שגויים, אז הכניסה נחסמה זמנית לביטחונך. אפשר לנסות שוב {when}."
+
+
+DUMMY_HASH = hash_secret("not-a-real-code")
 
 
 # ---------------------------------------------------------------- auth
@@ -107,14 +217,24 @@ def login():
     if request.method == "POST":
         username = (request.form.get("username") or "").strip()
         password = request.form.get("password") or ""
+        keys = attempt_keys("login", username)
+        wait = blocked_for(*keys)
+        if wait:
+            # while blocked, the password isn't checked at all, even a correct one
+            return render_template("login.html", mode="login", error=blocked_message(wait)), 429
         row = db().execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
-        if row and check_password_hash(row["pw_hash"], password):
+        # check a hash even for unknown users, so response time doesn't reveal which names exist
+        ok = check_password_hash(row["pw_hash"] if row else DUMMY_HASH, password) and row is not None
+        if ok:
+            clear_fails(keys[0])
             session.clear()
             session.permanent = True
             session["uid"] = row["id"]
             session["username"] = row["username"]
             return redirect(url_for("index"))
-        error = "שם המשתמש או הסיסמה לא נכונים"
+        note_fail(*keys)
+        wait = blocked_for(*keys)
+        error = blocked_message(wait) if wait else "שם המשתמש או הסיסמה לא נכונים"
     return render_template("login.html", mode="login", error=error)
 
 
@@ -133,32 +253,81 @@ def register():
             error = "הסיסמאות לא תואמות"
         else:
             try:
+                code = new_recovery_code()
                 cur = db().execute(
-                    "INSERT INTO users (username, pw_hash, created_at) VALUES (?, ?, ?)",
-                    (username, generate_password_hash(password, method="pbkdf2:sha256"), time.time()),
+                    "INSERT INTO users (username, pw_hash, recovery_hash, created_at) VALUES (?, ?, ?, ?)",
+                    (username, hash_secret(password), hash_secret(normalize_code(code)), time.time()),
                 )
                 db().commit()
                 session.clear()
                 session.permanent = True
                 session["uid"] = cur.lastrowid
                 session["username"] = username
-                return redirect(url_for("index"))
+                # the code is shown once, right here, and never stored in plain text
+                return render_template("login.html", mode="code", code=code, reason="new")
             except sqlite3.IntegrityError:
                 error = "שם המשתמש הזה כבר תפוס"
     return render_template("login.html", mode="register", error=error)
 
 
+@app.route("/forgot", methods=["GET", "POST"])
+def forgot():
+    error = None
+    if request.method == "POST":
+        username = (request.form.get("username") or "").strip()
+        code = normalize_code(request.form.get("code"))
+        password = request.form.get("password") or ""
+        confirm = request.form.get("confirm") or ""
+        keys = attempt_keys("forgot", username)
+        wait = blocked_for(*keys)
+        if wait:
+            return render_template("login.html", mode="forgot", error=blocked_message(wait)), 429
+        elif len(password) < 6:
+            error = "הסיסמה צריכה להיות באורך 6 תווים לפחות"
+        elif password != confirm:
+            error = "הסיסמאות לא תואמות"
+        else:
+            row = db().execute("SELECT id, username, recovery_hash FROM users WHERE username = ?", (username,)).fetchone()
+            stored = row["recovery_hash"] if row and row["recovery_hash"] else DUMMY_HASH
+            ok = check_password_hash(stored, code) and row is not None and bool(row["recovery_hash"])
+            if not ok:
+                note_fail(*keys)
+                wait = blocked_for(*keys)
+                # same message whether the user exists or not
+                error = blocked_message(wait) if wait else "שם המשתמש או קוד השחזור לא נכונים"
+            else:
+                clear_fails(keys[0])
+                db().execute("UPDATE users SET pw_hash = ? WHERE id = ?", (hash_secret(password), row["id"]))
+                db().commit()
+                # a used code is retired: the user gets a new one, shown once
+                new_code = set_recovery_code(row["id"])
+                session.clear()
+                session.permanent = True
+                session["uid"] = row["id"]
+                session["username"] = row["username"]
+                return render_template("login.html", mode="code", code=new_code, reason="reset")
+    return render_template("login.html", mode="forgot", error=error)
+
+
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 
 # ---------------------------------------------------------------- app shell
 @app.route("/")
-@login_required()
 def index():
+    # visitors who aren't signed in see the welcome page; signed-in users get the app
+    if not session.get("uid"):
+        return render_template("welcome.html")
     return send_from_directory(app.static_folder, "index.html", max_age=0)
+
+
+@app.route("/robots.txt")
+def robots():
+    body = "User-agent: *\nAllow: /$\nAllow: /login\nAllow: /register\nDisallow: /api/\n"
+    return app.response_class(body, mimetype="text/plain")
 
 
 @app.route("/sw.js")
@@ -188,7 +357,46 @@ def require_json():
 @app.get("/api/me")
 @login_required(api=True)
 def me():
-    return jsonify(id=session["uid"], username=session["username"])
+    row = db().execute("SELECT recovery_hash FROM users WHERE id = ?", (session["uid"],)).fetchone()
+    return jsonify(id=session["uid"], username=session["username"], has_recovery=bool(row and row["recovery_hash"]))
+
+
+@app.post("/api/recovery")
+@login_required(api=True)
+def make_recovery():
+    """Create a new recovery code for the signed-in user. Asks for the current password first."""
+    require_json()
+    data = request.get_json(silent=True) or {}
+    keys = ("rec:" + str(session["uid"]),)
+    if too_many_fails(*keys):
+        return jsonify(error="too_many"), 429
+    row = db().execute("SELECT pw_hash FROM users WHERE id = ?", (session["uid"],)).fetchone()
+    if not row or not check_password_hash(row["pw_hash"], data.get("password", "")):
+        note_fail(*keys)
+        return jsonify(error="wrong_password"), 403
+    return jsonify(code=set_recovery_code(session["uid"]))
+
+
+@app.post("/api/account/delete")
+@login_required(api=True)
+def delete_account():
+    """Permanently delete the signed-in user and everything they saved. Asks for the current password."""
+    require_json()
+    data = request.get_json(silent=True) or {}
+    uid = session["uid"]
+    keys = ("del:" + str(uid),)
+    if too_many_fails(*keys):
+        return jsonify(error="too_many"), 429
+    row = db().execute("SELECT pw_hash FROM users WHERE id = ?", (uid,)).fetchone()
+    if not row or not check_password_hash(row["pw_hash"], data.get("password", "")):
+        note_fail(*keys)
+        return jsonify(error="wrong_password"), 403
+    conn = db()
+    with conn:   # one transaction: either everything is deleted or nothing is
+        conn.execute("DELETE FROM docs WHERE user_id = ?", (uid,))
+        conn.execute("DELETE FROM users WHERE id = ?", (uid,))
+    session.clear()
+    return jsonify(ok=True)
 
 
 @app.get("/api/doc/<name>")
@@ -253,6 +461,8 @@ def security_headers(resp):
     resp.headers.setdefault("X-Content-Type-Options", "nosniff")
     resp.headers.setdefault("X-Frame-Options", "DENY")
     resp.headers.setdefault("Referrer-Policy", "same-origin")
+    if request.path in ("/register", "/forgot", "/api/recovery"):
+        resp.headers["Cache-Control"] = "no-store"   # pages that may show a recovery code
     return resp
 
 
